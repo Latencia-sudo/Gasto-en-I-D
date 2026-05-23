@@ -1,0 +1,266 @@
+---
+title: "Gasto en I+D"
+format: html
+date: 08-02-2024
+author: "Luis Alfonso Jorge Aparicio"
+toc: true
+embed-resources: true
+number-sections: true
+theme: journal
+---
+
+## INFORME GASTO EN I + D INTERNA POR SECTOR DE EJECUCIÓN Y CLASE DE GASTO
+
+## INTRODUCCIÓN
+
+El informe que acontinuación se presenta tiene como principal objetivo mostrar el gasto en I+D interna por sector de ejecución y clase de gasto. El informe está basado en los datos que proporciona el Instituto Nacional de Estadística (INE).
+
+Los sectores que intervienen en el informe son los siguientes:
+
+-   La Administración pública,
+
+-   Enseñanza superior,
+
+-   Empresas ,
+
+-   Instituciones privadas sin fines de lucro (IPSFL).
+
+Los gastos que se tienen en cuenta en el informe son :
+
+-   Gastos corrientes,
+
+-   Coste laboral,
+
+-   Otros gastos corrientes,
+
+-   Gastos de capital.
+
+Para una mayor información de los datos utilizados, consultar en INE: <https://ine.es/jaxi/Tabla.htm?tpx=60382&L=0>
+
+## ANÁLISIS EXPLORATORIO
+
+El objetivo del análisis exploratorio es mostrar datos relevantes de las variables que se han utilizado para realizar el análisis. Se muestra una descripción algo más detallada en la que se tienen en consideración el valor mínimo y el máximo, así como la media de cada uno de los sectores análizados. En el análisis también figuran otras variables como son la mediana, el primer cuartil y el tercer cuartil.
+
+En cada uno de los sectores que se analizan se observa lo siguiente:
+
+1\) El gasto en I + D total de todos los sectores alcanza un mínimo: 1.349.792 y un máximo de : 19.324.755 , situándose el gasto medio en : 11.324.895.
+
+2\) El gasto en I + D de las Empresas alcanza un mínimo de: 670.636 y un máximo de: 10.901.728, situándose el gasto medio en: 6.406.910.
+
+3\) El gasto en I + D de la Enseñanza superior alcanza un mínimo de: 372.169 y un máximo de: 5.026.022, situándose el gasto medio en: 2.941.180.
+
+4\) El gasto en I + D de la Administración pública alcanza un mínimo de: 3.05.311 y un máximo de: 3.329.694, situándose el gasto medio en: 1.936.754.
+
+5\) El gasto en I + D de las Instituciones privadas sin fines de lucro alcanza un mínimo de: 1.677 y un máximo de: 67.311, situándose el gasto medio en: 40.051.
+
+Unidades: Miles de euros.
+
+En el análisis se observa que son las empresas las que más gastan en I + D seguidas por la Enseñanza superior, situándose la Administración pública y las Instituciones sin fines de lucro en las últimas posiciones.
+
+Gasto en I + D de mayor a menor:
+
+1.  Empresas,
+
+2.  Enseñanza superior,
+
+3.  Administración pública,
+
+4.  Instituciones privadas sin fines de lucro.
+
+```{r echo=FALSE}
+
+# Librerías utilizadas
+suppressPackageStartupMessages({
+library(tidyverse)
+library(plotly)
+library(ggplot2)
+})
+
+
+# Creación del data frame: gasto_empresas_id  
+
+gasto_empresas_id <- data.frame(
+ Sectores = c("Total sectores","Adaministración pública","Enseñanza superior","Empresas","IPSFL"),
+ Total_sectores = c(19324755,17974963,11882678,6092285,1349792 ), 
+ Administracion_publica = c(3329694	,3024383,1705196,1319187,305311 ),
+ Enseñanza_superior = c( 5026022,4653854,3735287,918566,372169 ),
+ Empresas = c(10901728,10231092,6411358,3819734,670636),
+ IPSFL = c(67311,65634,30837,34797,1677)
+ 
+)
+# Resumen estadístico de los datos con la función summary
+
+summary(gasto_empresas_id)
+
+
+```
+
+## ANÁLISIS GRÁFICO DE LOS DATOS
+
+Dentro de esta sección se presentan una serie de gráficos que facilitan la comprensión de los datos analizados:
+
+-   En primer lugar se muestra un gráfico de sectores interactivo en el que se muestra el gasto por sector de actividad y el pocentaje total que representa ese gasto.
+
+-   En segundo lugar se muestra un gráfico de barras interactivo que muestra los gastos por sector de actividad.
+
+-   En tercer lugar se muestra un gráfico de barras interactivo que muestra los gastos por sector de ejecución.
+
+## Gráfico de sectores: gasto por sector de actividad y porcentaje
+
+```{r echo=FALSE}
+
+# Librerías utilizadas
+
+library(tidyverse)
+library(plotly)
+library(ggplot2)
+
+# Datos para la creación de un gáfico de sectores interactivo por sector de actividad
+
+sectores <- c("Administración pública", "Enseñanza superior", "Empresas", "IPSFL")
+total_gastos <- c(3329694,5026022,10901728,67311)
+
+# Creación del data frame
+
+df <- data.frame(
+  Sector = sectores,
+  "Total Gastos" = total_gastos
+)
+
+# Crear el gráfico de sectores mediante la función ploy_ly
+
+grafico_sectores <- plot_ly(
+  data = df,
+  labels = ~Sector,
+  values = ~`total_gastos`,
+  type = "pie",
+  textinfo = "label+percent",
+  insidetextorientation = "radial"
+) %>%  
+  layout( warnings(
+    title = "Total Gastos por sectores de actividad. Fuente: INE",
+    xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+    yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+    showlegend = TRUE,
+    legend = list(orientation = "h", x = 0.5, y = -0.1),
+    autosize = FALSE,
+    width = 600,
+    height = 400
+  ))
+
+# Mostrar el gráfico de sectores
+
+grafico_sectores
+
+
+```
+
+## Gráfico de barras: clase de gasto por sector de actividad
+
+```{r echo=FALSE}
+
+# Librerías utilizadas
+
+library(tidyverse)
+library(plotly)
+library(ggplot2)
+
+# Datos para la creación de un gráfico de barras interactivo que muestra los gastos por sector de actividad
+
+sectores <- c("Total","Gastos corrientes","Coste laboral","Otros gastos corrientes","Gastos de capital")
+total_gastos <- c(19324755,17974963,11882678,6092285,1349792)
+total_corrientes <- c(3329694,3024383,1705196,1319187,305311)
+coste_laboral <- c(5026022,4653854,3735287,918566,372169) 
+otros_corrientes <- c(10901728,10231092,6411358,3819734,670636) 
+gastos_capital <- c(67311,65634,30837,34797,1677)
+
+
+# Creación del gráfico de barras interactivo 
+
+grafico_barras <- plot_ly(x = sectores, type = "bar")
+grafico_barras <- grafico_barras %>% add_trace(y = total_gastos, name = "Total Sectores", marker = list(color = "blue"))
+grafico_barras <- grafico_barras %>% add_trace(y = total_corrientes, name = "Administración pública", marker = list(color = "green"))
+grafico_barras <- grafico_barras %>% add_trace(y = coste_laboral, name = "Enseñanza superior", marker = list(color = "orange"))
+grafico_barras <- grafico_barras %>% add_trace(y = otros_corrientes, name = "Empresas", marker = list(color = "purple"))
+grafico_barras <- grafico_barras %>% add_trace(y = gastos_capital, name = "IPSFL", marker = list(color = "red"))
+
+grafico_barras <- grafico_barras %>% layout(
+  barmode = "group",
+  xaxis = list(title = "Gastos"),
+  yaxis = list(title = "Miles de euros"),
+  title = "Clase de gasto por sector de actividad. Fuente: INE")
+
+# Mostrar el gráfico de barras
+
+grafico_barras
+
+```
+
+## Gráfico de barras: gasto por sector de ejecución
+
+```{r echo=FALSE}
+
+# Librerías utilizadas
+
+library(tidyverse)
+library(plotly)
+library(ggplot2)
+
+# Gráfico de barras interactivo que muestra la clase de gasto por sector de ejecución
+ 
+grafico_barras_sector <-  c("Total sectores","Administración pública","Enseñanza superior","Empresas","IPSFL")
+Total_sectores <- c(19324755,3329594,5026022,10901728,67311)
+Administracion_publica <- c(17974963,3024383,4653854,10231092,65634)
+Enseñanza_superior <- c(11882678,1705196,3735287,6411358,30837)
+Empresas <- c(6092285,1319187,918566,3819734,34797) 
+IPSFL <- c(1349792,305311,372169,670636,1677)
+
+# Creación del gráfico de barras interactivo
+
+grafico_barras_sector <- plot_ly(x= grafico_barras_sector,type = "bar")
+grafico_barras_sector <- grafico_barras_sector %>% add_trace(y = ~Total_sectores,name = "Total gasto",marker = list(color = "blue")) 
+grafico_barras_sector <- grafico_barras_sector %>% add_trace(y = ~Administracion_publica,
+ name = "Gastos corrientes", marker = list(color = "green"))
+grafico_barras_sector <- grafico_barras_sector %>% add_trace(y = ~Enseñanza_superior,
+    name = "Coste laboral", marker = list(color = "orange")) 
+grafico_barras_sector <- grafico_barras_sector %>% add_trace(y = ~Empresas, name = "Otros gastos corrientes", marker = list(color = "purple"))
+grafico_barras_sector <- grafico_barras_sector %>% add_trace(y = ~IPSFL, name = "Gastos de capital", marker = list(color = "red"))
+
+grafico_barras_sector <- grafico_barras_sector %>% 
+  layout( barmode = "group",
+xaxis = list(title = "Sectores"), 
+yaxis = list(title = "Miles de euros"), 
+title = "Gasto por sector de ejecución, fuente: INE ")
+
+# Mostrar el gráfico de barras
+
+grafico_barras_sector
+
+
+
+
+```
+
+## **RESULTADOS Y CONCLUSIONES**
+
+A modo de resumen de todo lo expuesto anteriormente, son las Empreasas las que aportan un mayor gasto en I + D. La Enseñanza superior queda situada en una segunda posicón en este tipo de gasto, quedando la Administración pública y las Instituciones privadas sin fines de lucro en las últimas posiciones.
+
+-   *La importancia de la I + D :* Europa tiene todavía mucho trabajo por delante en cuanto a la investigación y el desarrollo frente a otros territorios como EE.UU. o la India, que lideran este sector. Los paises del centro y del norte de Europa son los que cuentan con mayor intensidad de gasto en investigación y desarrollo. En los primeros puestos de la lista figuran Suecia y Austria, cuyo gasto medio en I + D supone el 3,3% y el 3,1% del PIB. Después se encuentran Alemania y Dinamarca, ambos con un 2,9% , quedándose a una decima de alcanzar el 3%, que es el objetivo fijado por la UE en su estrategia en Europa para el año 2020. En el caso de España, se aprecia un estancamiento considerable en los últimos diez años. Nos mantenemos en el mismo porcentaje que teníamos desde el año 2006. Sólo por detras de nosotros se encuentra Grecia y nueve miembros de reciente adhesión a la Unión Europea. Un dato preocupante para España.
+
+El gasto en I + D tiene múltiples beneficios tanto a nivel empresarial como econónico y social. Lo más importente de la I + D es generar información y conocimiento para tratar de resolver los problemas o dudas que surgen frente a un aspecto destacado de la sociedad. La importancia de las inversiones en I + D en las empresas es clave para incrementar la productividad para abrir nuevos horizontes en el mercado, y entre otras cosas, para mejorar la reputación de la compañía.
+
+Las compañías que más recursos destinan a innovar en sus productos y procesos productivos, y además en el desarrollo de los mismos, son los del sector tecnológico. No obstante, esto no ha sido siempre así, ya que hace unos años las empresas que más se dedicaban a esta actividad eran farmacéuticas y fabricantes de automóviles.
+
+## BIBLIOGRAFÍA
+
+Toda la información que se ha utilizado para la elaboración del informe ha sido obtenida de las siguientes fuentes:
+
+-   Las tablas estadísticas se han obtenido del Instituto Nacional de Estadística(INE),
+
+-   *La importancia de la I + D ,* se ha obtenido de la página web del periódico "La Razón", referente informativo de la vida política, social y económica española.
+
+Enlaces a las páginas de las fuentes mencionadas:
+
+**INE**: <https://ine.es/jaxi/Tabla.htm?tpx=60382&L=0>
+
+**La Razón**: <https://www.larazon.es/economia/la-importancia-de-la-i-d-KF19854428/>
